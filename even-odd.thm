@@ -2,13 +2,6 @@
 %%
 %% This is a simple example where induction is needed at a nested rather
 %% than immediate recursive call.
-Specification "nat".
-
-Kind      nat                 type.
-
-Type      z                   nat.
-Type      s                   nat -> nat.
-
 Define nat : nat -> prop by
   nat z ;
   nat (s N) := nat N.
