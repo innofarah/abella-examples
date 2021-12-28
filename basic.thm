@@ -1,6 +1,6 @@
 Kind nat type.
 
-Import "nats".
+Import "https://raw.githubusercontent.com/innofarah/abella-examples/main/nats.thm".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%    Simple arithmetic  (most written by Rob Blanco)     %%%%
