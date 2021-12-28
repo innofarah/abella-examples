@@ -1,7 +1,8 @@
 Kind nat type.
 
 %%% Import "monotone". --> which imports "order" containing stuff used in this file 
-Import "order".
+Import "https://raw.githubusercontent.com/innofarah/abella-examples/main/order.thm".
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%    Fibonacci numbers     (DM 25 Oct 2016)              %%%%
