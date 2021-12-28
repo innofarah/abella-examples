@@ -1,6 +1,6 @@
 Kind nat type.
 
-Import "basic".
+Import "https://raw.githubusercontent.com/innofarah/abella-examples/main/basic.thm".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%    Greater and lessthan relationship on nat            %%%%
