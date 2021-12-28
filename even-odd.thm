@@ -1,49 +1,167 @@
-%% Proof that every natural number is even or odd
-%%
-%% This is a simple example where induction is needed at a nested rather
-%% than immediate recursive call.
-Specification "nat".
+%IPFS INCLUDE QmbPTY6JjqgfZxQUEba1DRPyC3XXVm6fJoPTxbFY4eAtGd.
 
-Define nat : nat -> prop by
-  nat z ;
-  nat (s N) := nat N.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    Theorems about even and odd
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Define even : nat -> prop by
   even z ;
-  even (s (s N)) := even N.
+  even (s (s X)) := even X.
 
 Define odd : nat -> prop by
   odd (s z) ;
-  odd (s (s N)) := odd N.
+  odd (s (s X)) := odd X.
 
-Theorem even_or_odd : forall N, nat N -> even N \/ odd N.
-induction on 1. intros. case H1.
-  search.
-  case H2.
-    search.
-    apply IH to H3. case H4.
-      search.
-      search.
+Theorem even_type : forall X, even X -> nat X.
+ induction on 1. intros. case H1. search.  apply IH to H2. search.
+
+Theorem odd_type : forall X, odd X -> nat X.
+ induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem even_odd : forall X, even X -> odd (s X).
+induction on 1. intros. case H1. search. apply IH to H2. unfold. search.
+
+Theorem odd_even : forall X, odd X -> even (s X).
+induction on 1. intros. case H1. search. apply IH to H2. unfold. search.
+
+Theorem not_even_and_odd : forall X, even X -> odd X -> false.
+  induction on 1. intros. case H1. case H2. case H2. apply IH to H3 H4.
+
+Theorem even_or_odd : forall X, nat X -> (even X \/ odd X).
+ induction on 1. intros. case H1.
+  left. search.
+  apply IH to H2. case H3. 
+    apply even_odd to H4. right. search.
+    apply odd_even to H4. left. search.
+
+Theorem odd_or_even : forall X, nat X -> (odd X \/ even X).
+ induction on 1. intros. case H1.
+  right. search.
+  apply IH to H2. case H3. 
+    apply odd_even to H4. right. search.
+    apply even_odd to H4. left. search.
+
+Theorem not_even_odd : forall X, nat X -> (even X -> false) -> odd X.
+induction on 1. intros. case H1.  assert even z. apply H2 to H3.
+assert nat (s N). apply odd_or_even to H4. case H5. search. apply H2 to H6.
+
+Theorem even_or_not_even : forall X, nat X -> (even X \/ (even X -> false)).
+  induction on 1. intros. case H1. left. search. apply IH to H2. case H3.
+    right. intros. apply even_odd to H4. apply not_even_and_odd to H5 H6.
+    left. apply not_even_odd to H2 H4. backchain odd_even.
+
+Theorem plus_twice : forall X Y, nat X -> nat Y -> plus X X Y -> even Y.
+ induction on 1. intros. case H1. 
+   case H3. search.
+   case H3. case H2. assert nat (s N).
+   apply plus_comm to H6 H5.  case H8. case H6. apply IH to H4 H10 H9. search.
+
+Theorem odd_plus_even : forall X Y Z, odd X -> even Y -> plus X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply even_odd to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply odd_even to H7. apply even_odd to H8. search.
+
+Theorem odd_plus_odd : forall X Y Z, odd X -> odd Y -> plus X Y Z -> even Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply odd_even to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply even_odd to H7. apply odd_even to H8. search.
+
+Theorem times2_even : forall X Y, nat X -> times (s (s z)) X Y -> even Y.
+  intros. case H2. case H3. case H5. case H6. apply plus_type2 to H1 H4.
+  apply plus_twice to H1 H7 H4. search.
+
+Theorem even_times2 : forall Y, even Y -> exists Y', times (s (s z)) Y' Y.
+  induction on 1. intros. case H1. exists z. search.
+  apply IH to H2. exists (s Y'). unfold. exists (s Y'). split.
+   unfold. exists z. split. search. search.
+   case H3. case H4. case H6. case H7. unfold. 
+   assert plus (s N') N' (s X). apply even_type to H2. assert nat (s X).
+   apply plus_comm to H10 H8. search.
+
+Theorem odd_times_odd : forall X Y Z, odd X -> odd Y -> times X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+   case H3. case H4. case H5. search.
+   case H3. case H5. apply IH to H4 H2 H7.  apply odd_plus_odd to H9 H2 H8.
+      apply odd_type to H2.  apply plus_type2 to H11 H6.
+      apply plus_comm to H12 H6. apply odd_plus_even to H2 H10 H13. search.
+
+Theorem even_not_odd : forall X, even X -> (odd X -> false).
+  induction on 1. intros. case H1. case H2. case H2. apply IH to H3 H4.
+
+Theorem odd_not_even : forall X, odd X -> (even X -> false).
+  induction on 1. intros. case H1. case H2. case H2. apply IH to H3 H4.
+
+Theorem not_odd_even : forall X, nat X -> (odd X -> false) -> even X.
+  intros. apply even_or_odd to H1. case H3. search. apply H2 to H4.
 
 
-%% An example of mutual induction
+%% Do some experiments using the negation of even
 
-Define
-  even' : nat -> prop,
-  odd' : nat -> prop
-by
-  even' z ;
-  odd' (s N) := even' N ;
-  even' (s N) := odd' N.
+CoDefine neven : nat -> prop by
+  neven X := (X = z -> false) /\ forall Y, X = (s (s Y)) -> neven Y.
 
-Theorem even'_nat : forall N, even' N -> nat N.
-induction on 1. intros. case H1.
-  search.
-  case H2. apply IH to H3. search.
+Theorem odd_neven : forall X, odd X -> neven X.
+ induction on 1. intros. case H1.
+   unfold. intros. case H2. intros. case H2.
+   apply IH to H2. unfold. intros. case H4. intros. case H4. search.
 
-Theorem odd'_nat : forall N, odd' N -> nat N.
-induction on 1. intros. case H1.
-  case H2.
-    search.
-    apply IH to H3. search.
+Theorem not_neven_and_even : forall X, even X -> neven X -> false.
+ induction on 1. intros. case H1. case H2. apply H3 to _.
+  case H2. assert (s (s X1)) = (s (s X1)). apply H5 to H6. apply IH to H3 H7.
 
+% Theorem odd_neven : forall X, nat X -> neven X -> odd X.
+%  induction on 1. intros. case H1.
+%  case H2. apply H3 to _.  apply IH to H3. abort.
+
+Define natt : nat -> prop by
+  natt z ;
+  natt (s z) ;
+  natt (s (s X)) := natt X.
+
+% Shift datatype description yield simple proof.
+
+Theorem again : forall X, natt X -> (even X \/ (even X -> false)).
+  induction on 1. intros pivot. pivot: case pivot.
+    left. search.
+    right. intros hyp. case hyp.
+    cases: apply IH to pivot. hyp:case cases.
+      left. search. right. intros hyp. hyp: case hyp1. apply hyp to hyp1.
+
+% Theorem times_even_is_even : forall X Y Z, nat X -> even X -> times X Y Z -> even Z.
+%   induction on 2. intros. case H2.
+%     case H3. search.
+%     case H3. case H5. case H1. case H9. apply IH to H10 H4 H7.
+% 
+% 
+% Theorem conseq_nats : forall X Y, nat X -> times X (s X) Y -> even Y.
+%   intros. assert even X \/ odd X.
+%   apply even_or_odd to H1. case H3. left. search. right. search.
+%   case H3. 
+% 
+% Theorem square_even : forall Y Z, nat Y -> times Y Y Z -> even Z -> even Y.
+%   intros. assert (odd Z -> false). intros. apply even_not_odd to H3 H4.
+%   *** continue
+% 
+% 
+%   induction on 1. intros. case H1.
+%     case H2. search.
+%     case H2. apply even_type to H3.  apply plus_comm to H7 H6. case H8.
+%             assert nat (s N). apply plus_type1 to H6. apply times_comm' to H4 H10 H11 H5.
+%             case H12. apply IH to H4 H13 
+% 
+% 
+%     case H1 (keep).  apply plus_type1 to H5.  apply times_comm' to H6 H1 H7 H4.
+%       case H8.  **** continue here
+% 
+% 
+% 
+%     apply even_type to H2.  apply plus_comm to H5 H4. case H6.
+% 
+%    *** Continue here
+% 
+% Theorem irrational2 : forall X Y SqX SqY, nat X -> nat Y -> times X X SqX -> times Y Y SqY -> 
+%                                           times (s (s z)) SqX SqY -> false.
+%   intros. apply odd_or_even to H2. case H6. case H3.
+%   apply plus_type2 to 
