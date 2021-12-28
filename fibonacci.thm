@@ -1,4 +1,7 @@
-%IPFS INCLUDE QmdJxjGRDMjvRccFq5GxfZ6LztKzFvzp5iCiFVa1dLnxS3.
+Kind nat type.
+
+%%% Import "monotone". --> which imports "order" containing stuff used in this file 
+Import "order".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%    Fibonacci numbers     (DM 25 Oct 2016)              %%%%

@@ -1,5 +1,6 @@
-%% nats.thm
-%IPFS INCLUDE QmNkkWkrnFZCzQPy7Q6yeJNxMFhszCEpYLJ5pNtJixc3Bs.
+Kind nat type.
+
+Import "nats".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%    Simple arithmetic  (most written by Rob Blanco)     %%%%
